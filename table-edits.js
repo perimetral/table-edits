@@ -39,15 +39,16 @@
 				$(this.options.buttonSelector, this.element)
 					.bind('click', this.toggle.bind(this));
 			}
+			this._saveBlock = false;
 		},
 
 		toggle: function(e) {
 			e.preventDefault();
 
-			this.editing = !this.editing;
+			if (! this._saveBlock) this.editing = !this.editing;
 
 			if (this.editing) {
-				this.edit();
+				if (! this._saveBlock) this.edit();
 			} else {
 				this.save();
 			}
@@ -86,6 +87,13 @@
 						 .dblclick(instance._captureEvent);
 					if (self.options.defaultClass) $(input).addClass(self.options.defaultClass);
 					if ($(this).data('field-class')) $(input).addClass($(this).data('field-class'));
+				} else if ($(this).data('field-type') === 'textarea') {
+					input = $('<textarea></textarea>')
+						.val(value)
+						.data('old-value', value)
+						.dblclick(instance._captureEvent);
+					if (self.options.defaultClass) $(input).addClass(self.options.defaultClass);
+					if ($(this).data('field-class')) $(input).addClass($(this).data('field-class'));
 				} else {
 					input = $('<input type="text" />')
 						.val(value)
@@ -93,7 +101,7 @@
 						.dblclick(instance._captureEvent);
 					if (self.options.defaultClass) $(input).addClass(self.options.defaultClass);
 					if ($(this).data('field-class')) $(input).addClass($(this).data('field-class'));
-				};
+				}
 
 				input.appendTo(this);
 
@@ -106,6 +114,7 @@
 		},
 
 		save: function() {
+			this._saveBlock = true;
 			var instance = this,
 				values = {};
 
@@ -116,11 +125,9 @@
 				$('td[data-field]', this.element).each(function() {
 					$(this).empty().text(values[$(this).data('field')]);
 				});
-			} else {
-				let self = this;
-				self.cancel();
+				this._saveBlock = false;
+				this.options.save.bind(this.element)(values);
 			};
-			this.options.save.bind(this.element)(values);
 		},
 
 		cancel: function() {
