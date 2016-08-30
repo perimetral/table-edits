@@ -6,6 +6,7 @@
 			dblclick: true,
 			button: true,
 			buttonSelector: ".edit",
+			buttonCancelSelector: '.inline-action-cancel',
 			maintainWidth: true,
 			dropdowns: {},
 			defaultClass: '',
@@ -40,6 +41,7 @@
 					.bind('click', this.toggle.bind(this));
 			}
 			this._saveBlock = false;
+			$(this.options.buttonCancelSelector).hide();
 		},
 
 		toggle: function(e) {
@@ -59,6 +61,7 @@
 				values = {};
 			let self = this;
 
+			$(this.options.buttonCancelSelector).show();
 			$('td[data-field]', this.element).each(function() {
 				var input,
 					field = $(this).data('field'),

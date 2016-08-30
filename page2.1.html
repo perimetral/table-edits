@@ -13,9 +13,27 @@
 			padding: 5px;
 			width: 200px;
 		}
+
+		.something {
+			background-color: yellow;
+		}
+
+	     .custom {
+			border:1px solid red;
+		}
+
+		.inline-action-cancel {
+			display: none;
+		}
 	</style>
 </head>
 <body>
+
+<select id="fakeValidation">
+  <option value="0">Validation Failed</option>
+  <option value="1">Validation Passed</option>
+</select>
+
 	<table>
 		<thead>
 			<tr>
@@ -28,7 +46,7 @@
 
 		<tr>
 			<td data-field="name_a">Hello World Row 1</td>
-			<td data-field="name_b">Super World Row 2</td>
+			<td data-field="name_b" data-field-class="custom" data-field-type="textarea">Super World Row 2</td>
 			<td>
 				<button type="button" class="inline-action-edit">Edit</button>
 				<button type="button" class="inline-action-cancel">Cancel</button>
@@ -36,7 +54,7 @@
 		</tr>
 		<tr>
 			<td data-field="name_a">Hello World Row 2</td>
-			<td data-field="name_b" data-field-type="textarea">Super World Row 2</td>
+			<td data-field="name_b">Super World Row 2</td>
 			<td>
 				<button type="button" class="inline-action-edit">Edit</button>
 				<button type="button" class="inline-action-cancel">Cancel</button>
@@ -47,29 +65,62 @@
 </html>
 
 <script>
+
+
+
 	$(function () {
-		$("table tr").editable({
+
+		
+
+
+		let ed = $("table tr").editable({
 			buttonSelector: ".inline-action-edit",
+			defaultClass: 'something',
+
+
 			validator: (values) => {
-				return values.name_b.length < 10;
+
+				var validation = $('#fakeValidation').val();
+
+				if (validation == "1") {
+					return true
+				}
+
+				return false;
 			},
-			defaultClass: '', //	NOT REQUIRED TO BE DEFINED, JUST DEMONSTRATION
 
 			edit: function (values) {
 				alert("edit callback");
 				$('.inline-action-edit', this).text("Save");
+
+				 var tr = $(this).closest('tr');
+				 tr.find('.inline-action-cancel').show();
 			},
 
 			save: function (values) {
 				alert("save callback");
 
 				$('.inline-action-edit', this).text("Edit");
+
+				var tr = $(this).closest('tr');
+				tr.find('.inline-action-cancel').hide();
 			},
 
 			cancel: function (values) {
 			  	alert("cancel callback"); 
+			  	$('.inline-action-edit', this).text("Edit");
 			  	// Render Input back to orginal Text 
+
+			  	var tr = $(this).closest('tr');
+				tr.find('.inline-action-cancel').hide();
 			  }
 			});
+		$("table tr").on('click', '.inline-action-cancel', function () {
+                var tr = $(this).closest('tr');
+                var inputText = $(tr).find("input").first().focus();
+                var eventKey = jQuery.Event("keydown");
+                eventKey.which = 27;
+                $(inputText).trigger(eventKey);
+       });
 	});
 </script>
