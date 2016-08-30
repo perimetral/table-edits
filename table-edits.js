@@ -56,6 +56,7 @@
 		edit: function() {
 			var instance = this,
 				values = {};
+			let self = this;
 
 			$('td[data-field]', this.element).each(function() {
 				var input,
@@ -83,12 +84,16 @@
 					input.val(value)
 						 .data('old-value', value)
 						 .dblclick(instance._captureEvent);
+					if (self.options.defaultClass) $(input).addClass(self.options.defaultClass);
+					if ($(this).data('field-class')) $(input).addClass($(this).data('field-class'));
 				} else {
 					input = $('<input type="text" />')
 						.val(value)
 						.data('old-value', value)
 						.dblclick(instance._captureEvent);
-				}
+					if (self.options.defaultClass) $(input).addClass(self.options.defaultClass);
+					if ($(this).data('field-class')) $(input).addClass($(this).data('field-class'));
+				};
 
 				input.appendTo(this);
 

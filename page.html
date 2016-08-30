@@ -51,6 +51,7 @@
 			validator: (values) => {
 				return values.name_b.length < 10;
 			},
+			defaultClass: '', //	NOT REQUIRED TO BE DEFINED, JUST DEMONSTRATION
 
 			edit: function (values) {
 				alert("edit callback");
