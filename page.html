@@ -1,0 +1,72 @@
+<html>
+<head>
+	<meta charset="utf-8">
+	<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
+	<script type="text/javascript" src="table-edits.js"></script>
+
+	<style>
+		table,td, th {
+			border:1px solid black;
+		}
+
+		td {
+			padding: 5px;
+			width: 200px;
+		}
+	</style>
+</head>
+<body>
+	<table>
+		<thead>
+			<tr>
+				<th>Name A</th>
+				<th>Name B</th>
+				<th></th>
+			</tr>
+		</thead>
+
+
+		<tr>
+			<td data-field="name_a">Hello World Row 1</td>
+			<td data-field="name_b">Super World Row 2</td>
+			<td>
+				<button type="button" class="inline-action-edit">Edit</button>
+			</td>
+		</tr>
+		<tr>
+			<td data-field="name_a">Hello World Row 2</td>
+			<td data-field="name_b">Super World Row 2</td>
+			<td>
+				<button type="button" class="inline-action-edit">Edit</button>
+			</td>
+		</tr>
+	</table>
+</body>
+</html>
+
+<script>
+	$(function () {
+		$("table tr").editable({
+			buttonSelector: ".inline-action-edit",
+			validator: (values) => {
+				return true;
+			},
+
+			edit: function (values) {
+				alert("edit callback");
+				$('.inline-action-edit', this).text("Save");
+			},
+
+			save: function (values) {
+				alert("save callback");
+
+				$('.inline-action-edit', this).text("Edit");
+			},
+
+			cancel: function (values) {
+			  	alert("cancel callback"); 
+			  	// Render Input back to orginal Text 
+			  }
+			});
+	});
+</script>
