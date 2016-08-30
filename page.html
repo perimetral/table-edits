@@ -32,7 +32,7 @@
 
 		<tr>
 			<td data-field="name_a">Hello World Row 1</td>
-			<td data-field="name_b" data-field-type="select" data-field-select="[1,2,34,5]">Super World Row 2</td>
+			<td data-field="name_b" data-field-type="select" data-field-select="[1,2,34,5]">Super World Row 1</td>
 			<td>
 				<button type="button" class="inline-action-edit">Edit</button>
 				<button type="button" class="inline-action-cancel">Cancel</button>
@@ -41,6 +41,14 @@
 		<tr>
 			<td data-field="name_a">Hello World Row 2</td>
 			<td data-field="name_b" data-field-class="custom" data-field-type="textarea">Super World Row 2</td>
+			<td>
+				<button type="button" class="inline-action-edit">Edit</button>
+				<button type="button" class="inline-action-cancel">Cancel</button>
+			</td>
+		</tr>
+		<tr>
+			<td data-field="name_a">Hello World Row 3</td>
+			<td data-field="name_b" data-field-type="select" data-field-select='{"xxx":"777","yyy":"666"}'>Super World Row 3</td>
 			<td>
 				<button type="button" class="inline-action-edit">Edit</button>
 				<button type="button" class="inline-action-cancel">Cancel</button>
@@ -73,7 +81,7 @@
 
 			cancel: function (values) {
 			  	alert("cancel callback"); 
-			  	// Render Input back to orginal Text 
+			  	$('.inline-action-edit', this).text("Edit");
 			  }
 			});
 	});

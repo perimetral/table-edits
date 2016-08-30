@@ -39,6 +39,8 @@
 			if (this.options.button) {
 				$(this.options.buttonSelector, this.element)
 					.bind('click', this.toggle.bind(this));
+				$(this.options.buttonCancelSelector, this.element)
+					.bind('click', this.cancel.bind(this));
 			}
 			this._saveBlock = false;
 			$(this.options.buttonCancelSelector).hide();
@@ -61,7 +63,7 @@
 				values = {};
 			let self = this;
 
-			$(this.options.buttonCancelSelector).show();
+			$(this.element).find(this.options.buttonCancelSelector).show();
 			$('td[data-field]', this.element).each(function() {
 				var input,
 					field = $(this).data('field'),
@@ -93,18 +95,18 @@
 				} else if ($(this).data('field-type') === 'select') {
 					input = $('<select></select>');
 					let values = $(this).data('field-select');
-					try {
-						if (! Array.isArray(values)) values = JSON.parse(values);
-					} catch (e) { console.log(e); };
-					for (var i = 0; i < values.length; i++) {
-						$('<option></option>')
-							 .text(values[i])
-							 .val(values[i])
-							 .appendTo(input);
+					if (Array.isArray(values)) {
+						let newValues = {};
+						values.forEach((x, i, ar) => { newValues[i] = x; });
+						values = newValues;
 					};
+					for (let i in values) {
+						$(`<option value=${i}>${values[i]}</option>`)
+							.appendTo(input);
+						input.val(i);
+					}
 
-					input.val(value)
-						 .data('old-value', value)
+					input.data('old-value', value)
 						 .dblclick(instance._captureEvent);
 					if (self.options.defaultClass) $(input).addClass(self.options.defaultClass);
 					if ($(this).data('field-class')) $(input).addClass($(this).data('field-class'));
@@ -141,19 +143,23 @@
 				values = {};
 
 			$('td[data-field]', this.element).each(function() {
-				values[$(this).data('field')] = $(':input', this).val();
+				if ($(this).data('field-type') === 'select') {
+					values[$(this).data('field')] = $(this).data('field-select')[$(':input', this).val()];
+				} else values[$(this).data('field')] = $(':input', this).val();
 			});
+
 			if (this.options.validator(values)) {
 				$('td[data-field]', this.element).each(function() {
 					$(this).empty().text(values[$(this).data('field')]);
 				});
-				$(self.options.buttonCancelSelector).show();
+				$(this.element).find(this.options.buttonCancelSelector).hide();
 				this._saveBlock = false;
 				this.options.save.bind(this.element)(values);
 			};
 		},
 
 		cancel: function() {
+			
 			let self = this;
 			var instance = this,
 				values = {};
@@ -167,7 +173,9 @@
 					   .text(value);
 			});
 
-			$(self.options.buttonCancelSelector).show();
+			this.editing = false;
+			$(this.element).find(this.options.buttonCancelSelector).hide();
+			this._saveBlock = false;
 			this.options.cancel.bind(this.element)(values);
 		},
 
@@ -176,11 +184,13 @@
 		},
 
 		_captureKey: function(e) {
+			let self = this;
 			if (e.which === 13) {
 				this.editing = false;
 				this.save();
 			} else if (e.which === 27) {
 				this.editing = false;
+				$(this.element).find(this.options.buttonCancelSelector).hide();
 				this.cancel();
 			}
 		}
