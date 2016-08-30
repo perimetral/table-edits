@@ -103,7 +103,7 @@
 					for (let i in values) {
 						$(`<option value=${i}>${values[i]}</option>`)
 							.appendTo(input);
-						input.val(i);
+						input.val($(this).data('field-selected'));
 					}
 
 					input.data('old-value', value)
@@ -145,6 +145,7 @@
 			$('td[data-field]', this.element).each(function() {
 				if ($(this).data('field-type') === 'select') {
 					values[$(this).data('field')] = $(this).data('field-select')[$(':input', this).val()];
+					$(this).data('field-selected', $(':input', this).val());
 				} else values[$(this).data('field')] = $(':input', this).val();
 			});
 
