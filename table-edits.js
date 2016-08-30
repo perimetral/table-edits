@@ -8,6 +8,7 @@
 			buttonSelector: ".edit",
 			maintainWidth: true,
 			dropdowns: {},
+			defaultClass: '',
 			edit: function() {},
 			save: function() {},
 			validator: (values) => { return true; },
@@ -111,9 +112,8 @@
 					$(this).empty().text(values[$(this).data('field')]);
 				});
 			} else {
-				$('td[data-field]', this.element).each(function() {
-					$(this).empty();
-				});
+				let self = this;
+				self.cancel();
 			};
 			this.options.save.bind(this.element)(values);
 		},
