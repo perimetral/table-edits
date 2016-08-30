@@ -90,6 +90,24 @@
 						 .dblclick(instance._captureEvent);
 					if (self.options.defaultClass) $(input).addClass(self.options.defaultClass);
 					if ($(this).data('field-class')) $(input).addClass($(this).data('field-class'));
+				} else if ($(this).data('field-type') === 'select') {
+					input = $('<select></select>');
+					let values = $(this).data('field-select');
+					try {
+						if (! Array.isArray(values)) values = JSON.parse(values);
+					} catch (e) { console.log(e); };
+					for (var i = 0; i < values.length; i++) {
+						$('<option></option>')
+							 .text(values[i])
+							 .val(values[i])
+							 .appendTo(input);
+					};
+
+					input.val(value)
+						 .data('old-value', value)
+						 .dblclick(instance._captureEvent);
+					if (self.options.defaultClass) $(input).addClass(self.options.defaultClass);
+					if ($(this).data('field-class')) $(input).addClass($(this).data('field-class'));
 				} else if ($(this).data('field-type') === 'textarea') {
 					input = $('<textarea></textarea>')
 						.val(value)
@@ -117,6 +135,7 @@
 		},
 
 		save: function() {
+			let self = this;
 			this._saveBlock = true;
 			var instance = this,
 				values = {};
@@ -128,12 +147,14 @@
 				$('td[data-field]', this.element).each(function() {
 					$(this).empty().text(values[$(this).data('field')]);
 				});
+				$(self.options.buttonCancelSelector).show();
 				this._saveBlock = false;
 				this.options.save.bind(this.element)(values);
 			};
 		},
 
 		cancel: function() {
+			let self = this;
 			var instance = this,
 				values = {};
 
@@ -146,6 +167,7 @@
 					   .text(value);
 			});
 
+			$(self.options.buttonCancelSelector).show();
 			this.options.cancel.bind(this.element)(values);
 		},
 
