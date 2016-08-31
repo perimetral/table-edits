@@ -12,7 +12,7 @@
 			defaultClass: '',
 			edit: function() {},
 			save: function() {},
-			validator: (values) => { return true; },
+			validator: (el, values) => { return true; },
 			cancel: function() {}
 		};
 
@@ -149,7 +149,7 @@
 				} else values[$(this).data('field')] = $(':input', this).val();
 			});
 
-			if (this.options.validator(values)) {
+			if (this.options.validator(this.element, values)) {
 				$('td[data-field]', this.element).each(function() {
 					$(this).empty().text(values[$(this).data('field')]);
 				});
