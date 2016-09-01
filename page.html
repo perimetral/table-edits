@@ -63,9 +63,9 @@
 		$("table tr").editable({
 			buttonSelector: ".inline-action-edit",
 			buttonCancelSelector: '.inline-action-cancel',
-			validator: (el, values) => {
+			validator: (el, values, cb) => {
 				console.log($(el));
-				return ($('#fakeValidation').val() == '1');
+				cb($('#fakeValidation').val() == '1');
 			},
 			defaultClass: '', //	NOT REQUIRED TO BE DEFINED, JUST DEMONSTRATION
 

@@ -12,7 +12,7 @@
 			defaultClass: '',
 			edit: function() {},
 			save: function() {},
-			validator: (el, values) => { return true; },
+			validator: (el, values, cb) => { return cb(true); },
 			cancel: function() {}
 		};
 
@@ -149,14 +149,15 @@
 				} else values[$(this).data('field')] = $(':input', this).val();
 			});
 
-			if (this.options.validator(this.element, values)) {
+			this.options.validator(this.element, values, (result) => {
+				if (! result) return false;
 				$('td[data-field]', this.element).each(function() {
 					$(this).empty().text(values[$(this).data('field')]);
 				});
 				$(this.element).find(this.options.buttonCancelSelector).hide();
 				this._saveBlock = false;
 				this.options.save.bind(this.element)(values);
-			};
+			});
 		},
 
 		cancel: function() {
